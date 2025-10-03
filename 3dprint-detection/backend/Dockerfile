@@ -1,18 +1,23 @@
-# ใช้ Python 3.10 (รองรับ Ultralytics / FastAPI ดีสุด)
+# backend/Dockerfile
+
+# ใช้ base image Python 3.10 slim
 FROM python:3.10-slim
 
-# Set working directory
+# ตั้ง working directory ใน container
 WORKDIR /app
 
-# ติดตั้ง dependencies ที่จำเป็น
+# คัดลอก requirements.txt เข้า container ก่อน (เพื่อ cache pip install)
 COPY requirements.txt .
+
+# อัปเกรด pip และติดตั้ง dependencies
+RUN python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# คัดลอกโค้ด backend ทั้งหมด
+# คัดลอก source code ทั้งหมดเข้า container
 COPY . .
 
-# เปิดพอร์ต FastAPI
+# expose port ของ backend
 EXPOSE 8000
 
-# รัน FastAPI ด้วย Uvicorn
+# คำสั่งรัน backend (แก้ตาม framework ของคุณ)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
