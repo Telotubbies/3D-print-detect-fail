@@ -1,0 +1,14 @@
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+#sidebar {
+  width: 250px;
+  min-height: 100vh;
+}
+
+.card-img-top {
+  max-height: 200px;
+  object-fit: cover;
+}

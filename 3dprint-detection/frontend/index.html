@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Print Detection</title>
+  <!-- Bootstrap CSS -->
+  <link href="/static/vendor/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="/static/assets/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="bg-light border-end p-3" id="sidebar">
+      <button id="uploadBtn" class="btn btn-primary w-100 mb-3">+ Upload Image</button>
+      <input type="file" id="fileInput" class="d-none" accept="image/png, image/jpeg">
+      <input type="text" id="apiKeyInput" class="form-control" placeholder="Enter API Key">
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-3">
+      <div class="row" id="cardContainer">
+        <!-- Cards จะถูก inject ด้วย JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="/static/vendor/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="/static/assets/app.js"></script>
+
+  <script>
+    // ตัวอย่าง JS สำหรับอัปโหลดไฟล์
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadBtn.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', async () => {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // ส่งไฟล์ไปที่ backend API
+        const apiKey = document.getElementById('apiKeyInput').value;
+        const response = await fetch('/cards/upload', { // เปลี่ยนให้ตรงกับ router ของ cards
+          method: 'POST',
+          headers: {
+            'x-api-key': apiKey
+          },
+          body: formData
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert('Upload Success!');
+          console.log(data);
+        } else {
+          alert('Upload Failed!');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
